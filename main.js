@@ -34,9 +34,19 @@ class App {
 		}
 	}
 
-	read(){
+	read(file){
+		const fs = require('fs');
+
+		if(!file){
+			console.log('Erro: O parâmentro de arquivo de entrada não pode ser vazio. Formato aceito: $ node main.js /arquivo/de/entrada');
+			return;
+		}
+		if(!fs.existsSync(file)){
+			console.log(`Erro: O Arquivo ${file} não existe.`);
+			return;
+		}
 		const lineReader = require('readline').createInterface({
-		  input: require('fs').createReadStream('teste')
+		  input: fs.createReadStream(file)
 		});
 
 		lineReader.on('line', (line) => {
@@ -46,7 +56,7 @@ class App {
 
 	processLine(line) {
 		line = line.split("");
-		var exit = line.map(this.prepareExit.bind(this));
+		let exit = line.map(this.prepareExit.bind(this));
 		console.log(exit.join(""));
 	}
 
@@ -56,5 +66,4 @@ class App {
 }
 
 const app = new App();
-
-app.read();
+app.read(process.argv[2]);
